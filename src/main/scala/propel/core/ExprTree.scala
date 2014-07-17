@@ -38,7 +38,7 @@ object ExprTree {
       *
       * @param id the id to look up from the context
       */
-    case class Lookup(id : Id) extends Expr
+    case class Lookup (id : Id) extends Expr
 
     /** Apply can be used to invoke functions with concrete arguments.
       *
@@ -57,7 +57,7 @@ object ExprTree {
       * @param e1 the expression to apply to
       * @param e2 the expression that will be applied to [[e1]]
       */
-    case class Apply(e1 : Expr, e2 : Expr) extends Expr
+    case class Apply (e1 : Expr, e2 : Expr) extends Expr
 
     /** Lambda represents a function body with a single bound variable.
       *
@@ -77,7 +77,7 @@ object ExprTree {
       *
       * @param fun function that expects an expression and returns the body of this lambda
       */
-    case class Lambda(fun : Expr => Expr) extends Expr
+    case class Lambda (fun : Expr => Expr) extends Expr
 
     /** A let expression allows you to assign sub-trees to ids making it easier to reuse them
       * in the nested expression.
@@ -92,7 +92,7 @@ object ExprTree {
       * @param decls declarations that assign an id to an expression
       * @param in the expression where the ids declared in [[decls]] will be visible
       */
-    case class Let(decls : Map[Id, Expr], in : Expr) extends Expr
+    case class Let (decls : Map[Id, Expr], in : Expr) extends Expr
 
     /** Allows the logic to branch out based on the value of a reference expression.
       *
@@ -103,6 +103,19 @@ object ExprTree {
       * @param ref the reference expression to match the cases against
       * @param cases pair of expressions, the first component is the pattern to match, the second is the expression to return
       */
-    case class Case(ref : Expr, cases : Seq[(Expr, Expr)]) extends Expr
+    case class Case (ref : Expr, cases : Seq[(Expr, Expr)]) extends Expr
 
+    /** This node allows the user to build more complex structures out of other structures.
+      *  
+      * Building a structure is roughly equivalent to creating a new resource and defining the functions
+      * that can be applied on it at the same time. The OOP equivalent is an anonymous class declaration.
+      * The SQL equivalent is a select clause.
+      * 
+      * A special case of this structure is a tuple where the field names are indexes that don't hold any 
+      * semantical value and the interpretation of each expression depends on their position.
+      * 
+      * @param fields a sequence of field name and expression pairs
+      */
+    case class Build (fields : Seq[(Id, Expr)]) extends Expr
+    
 }
